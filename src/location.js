@@ -5,7 +5,7 @@ export var location = {
   },
   actions: {
     go: function(pathname) {
-      history.pushState(null, "", pathname);
+      history.pushState(Object.assign(history.state || {}), "", pathname);
       dispatchEvent(new CustomEvent("pushstate", { detail: pathname }));
     },
     set: function(data) {
