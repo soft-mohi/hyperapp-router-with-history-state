@@ -1,27 +1,27 @@
-import { h } from "hyperapp"
+import { h } from "hyperapp";
 
 function getOrigin(loc) {
-  return loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "")
+  return loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "");
 }
 
 function isExternal(anchorElement) {
   // Location.origin and HTMLAnchorElement.origin are not
   // supported by IE and Safari.
-  return getOrigin(location) !== getOrigin(anchorElement)
+  return getOrigin(location) !== getOrigin(anchorElement);
 }
 
 export function Link(props, children) {
   return function(state, actions) {
-    var to = props.to
-    var location = state.location
-    var onclick = props.onclick
-    delete props.to
-    delete props.location
+    var to = props.to;
+    var location = state.location;
+    var onclick = props.onclick;
+    delete props.to;
+    delete props.location;
 
-    props.href = to
+    props.href = to;
     props.onclick = function(e) {
       if (onclick) {
-        onclick(e)
+        onclick(e);
       }
       if (
         e.defaultPrevented ||
@@ -34,14 +34,17 @@ export function Link(props, children) {
         isExternal(e.currentTarget)
       ) {
       } else {
-        e.preventDefault()
+        e.preventDefault();
 
         if (to !== location.pathname) {
-          history.pushState(location.pathname, "", to)
+          history.pushState(location.pathname, "", to);
+          dispatchEvent(
+            new CustomEvent("pushstate", { detail: location.pathname })
+          );
         }
       }
-    }
+    };
 
-    return h("a", props, children)
-  }
+    return h("a", props, children);
+  };
 }

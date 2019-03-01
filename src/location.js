@@ -1,19 +1,3 @@
-function wrapHistory(keys) {
-  return keys.reduce(function(next, key) {
-    var fn = history[key]
-
-    history[key] = function(data, title, url) {
-      fn.call(this, data, title, url)
-      dispatchEvent(new CustomEvent("pushstate", { detail: data }))
-    }
-
-    return function() {
-      history[key] = fn
-      next && next()
-    }
-  }, null)
-}
-
 export var location = {
   state: {
     pathname: window.location.pathname,
@@ -21,10 +5,11 @@ export var location = {
   },
   actions: {
     go: function(pathname) {
-      history.pushState(null, "", pathname)
+      history.pushState(null, "", pathname);
+      dispatchEvent(new CustomEvent("pushstate", { detail: pathname }));
     },
     set: function(data) {
-      return data
+      return data;
     }
   },
   subscribe: function(actions) {
@@ -34,18 +19,15 @@ export var location = {
         previous: e.detail
           ? (window.location.previous = e.detail)
           : window.location.previous
-      })
+      });
     }
 
-    var unwrap = wrapHistory(["pushState", "replaceState"])
-
-    addEventListener("pushstate", handleLocationChange)
-    addEventListener("popstate", handleLocationChange)
+    addEventListener("pushstate", handleLocationChange);
+    addEventListener("popstate", handleLocationChange);
 
     return function() {
-      removeEventListener("pushstate", handleLocationChange)
-      removeEventListener("popstate", handleLocationChange)
-      unwrap()
-    }
+      removeEventListener("pushstate", handleLocationChange);
+      removeEventListener("popstate", handleLocationChange);
+    };
   }
-}
+};
