@@ -37,7 +37,13 @@ export function Link(props, children) {
         e.preventDefault();
 
         if (to !== location.pathname) {
-          history.pushState(location.pathname, "", to);
+          history.pushState(
+            Object.assign(history.state || {}, {
+              prevLocation: location.pathname
+            }),
+            "",
+            to
+          );
           dispatchEvent(
             new CustomEvent("pushstate", { detail: location.pathname })
           );
