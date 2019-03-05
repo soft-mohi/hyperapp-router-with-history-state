@@ -23,7 +23,7 @@ interface RouteProps<P> {
   parent?: boolean;
   path?: string;
   location?: Location;
-  render: (props: RenderProps<P>) => VNode<RenderProps<P>>;
+  render: any;
 }
 
 export function Route<P>(
