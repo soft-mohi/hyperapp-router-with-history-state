@@ -38,7 +38,7 @@ export function Link(props, children) {
 
         if (to !== location.pathname) {
           history.pushState(
-            Object.assign(history.state || {}, {
+            Object.assign({}, {
               prevLocation: location.pathname
             }),
             "",
